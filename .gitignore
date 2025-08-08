@@ -1,0 +1,13 @@
+# Ignore environment files and compiled artifacts
+.env
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+node_modules/
+frontend/.next/
+frontend/out/
+*.log
+venv/
+*.sqlite3

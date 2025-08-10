@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Leave backend URL as an env var in Netlify UI (no hardcoding here)
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

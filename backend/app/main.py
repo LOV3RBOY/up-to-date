@@ -6,6 +6,7 @@ configuration in tests or when running background workers.
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
 from .db import engine
@@ -13,29 +14,29 @@ from .api import router as api_router
 
 
 def create_app() -> FastAPI:
-    """Construct and configure the FastAPI application.
-
-    Returns
-    -------
-    FastAPI
-        The configured FastAPI application.
-    """
     app = FastAPI(title="EBC Intel Radar API")
-        # Create database tables if they do not exist
+
+    # Auto-create DB tables
     models.Base.metadata.create_all(bind=engine)
 
+    # CORS for Netlify (and your custom domain if you add one later)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "https://*.netlify.app",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-    @app.get("/ping")
-    async def ping() -> dict[str, str]:
-        """Simple liveness probe."""
-        return {"message": "pong"}
+    @app.get("/health")
+    async def health() -> dict[str, str]:
+        return {"status": "ok"}
 
-    # Include additional API routes under the `/api` prefix
+    # APIs
     app.include_router(api_router, prefix="/api")
-
     return app
 
 
-# When the module is run directly by an ASGI server such as Uvicorn, create
-# the application instance at import time.
 app = create_app()

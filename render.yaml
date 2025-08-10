@@ -14,10 +14,10 @@ services:
       - key: CELERY_BROKER_URL
         fromService:
           name: ebc-intel-redis
-      - key: REDIS_URL
+      - key: CELERY_RESULT_BACKEND
         fromService:
           name: ebc-intel-redis
-      - key: CELERY_RESULT_BACKEND
+      - key: REDIS_URL
         fromService:
           name: ebc-intel-redis
       - key: PERIGON_API_KEY
@@ -41,10 +41,10 @@ services:
       - key: CELERY_BROKER_URL
         fromService:
           name: ebc-intel-redis
-      - key: REDIS_URL
+      - key: CELERY_RESULT_BACKEND
         fromService:
           name: ebc-intel-redis
-      - key: CELERY_RESULT_BACKEND
+      - key: REDIS_URL
         fromService:
           name: ebc-intel-redis
       - key: PERIGON_API_KEY
@@ -53,11 +53,10 @@ services:
         sync: false
     autoDeploy: true
 
-databases:
-  - name: ebc-intel-db
-    plan: free
-
-services:
   - type: redis
     name: ebc-intel-redis
+    plan: free
+
+databases:
+  - name: ebc-intel-db
     plan: free

@@ -7,6 +7,8 @@ configuration in tests or when running background workers.
 
 from fastapi import FastAPI
 
+from . import models
+from .db import engine
 from .api import router as api_router
 
 
@@ -19,6 +21,9 @@ def create_app() -> FastAPI:
         The configured FastAPI application.
     """
     app = FastAPI(title="EBC Intel Radar API")
+        # Create database tables if they do not exist
+    models.Base.metadata.create_all(bind=engine)
+
 
     @app.get("/ping")
     async def ping() -> dict[str, str]:

@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: ebc-intel-api
+    env: python
+    plan: free
+    buildCommand: pip install -r ebc_intel/backend/requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: ebc_intel/backend
+      - key: DATABASE_URL
+        fromDatabase: ebc-intel-db
+      - key: CELERY_BROKER_URL
+        fromService: ebc-intel-redis
+        name: REDIS_URL
+      - key: CELERY_RESULT_BACKEND
+        fromService: ebc-intel-redis
+        name: REDIS_URL
+      - key: PERIGON_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    autoDeploy: true
+
+  - type: worker
+    name: ebc-intel-worker
+    env: python
+    plan: free
+    buildCommand: pip install -r ebc_intel/backend/requirements.txt
+    startCommand: celery -A app.celery_app.celery_app worker -l info
+    envVars:
+      - key: PYTHONPATH
+        value: ebc_intel/backend
+      - key: DATABASE_URL
+        fromDatabase: ebc-intel-db
+      - key: CELERY_BROKER_URL
+        fromService: ebc-intel-redis
+        name: REDIS_URL
+      - key: CELERY_RESULT_BACKEND
+        fromService: ebc-intel-redis
+        name: REDIS_URL
+      - key: PERIGON_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    autoDeploy: true
+
+databases:
+  - name: ebc-intel-db
+    plan: free
+
+redis:
+  - name: ebc-intel-redis
+    plan: free

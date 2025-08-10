@@ -9,13 +9,17 @@ services:
       - key: PYTHONPATH
         value: ebc_intel/backend
       - key: DATABASE_URL
-        fromDatabase: ebc-intel-db
+        fromDatabase:
+          name: ebc-intel-db
       - key: CELERY_BROKER_URL
-        fromService: ebc-intel-redis
-        name: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
+      - key: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
       - key: CELERY_RESULT_BACKEND
-        fromService: ebc-intel-redis
-        name: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
       - key: PERIGON_API_KEY
         sync: false
       - key: OPENAI_API_KEY
@@ -32,13 +36,17 @@ services:
       - key: PYTHONPATH
         value: ebc_intel/backend
       - key: DATABASE_URL
-        fromDatabase: ebc-intel-db
+        fromDatabase:
+          name: ebc-intel-db
       - key: CELERY_BROKER_URL
-        fromService: ebc-intel-redis
-        name: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
+      - key: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
       - key: CELERY_RESULT_BACKEND
-        fromService: ebc-intel-redis
-        name: REDIS_URL
+        fromService:
+          name: ebc-intel-redis
       - key: PERIGON_API_KEY
         sync: false
       - key: OPENAI_API_KEY
@@ -49,6 +57,7 @@ databases:
   - name: ebc-intel-db
     plan: free
 
-redis:
-  - name: ebc-intel-redis
+services:
+  - type: redis
+    name: ebc-intel-redis
     plan: free
